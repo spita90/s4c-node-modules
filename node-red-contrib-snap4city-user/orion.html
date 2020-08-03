@@ -867,473 +867,473 @@
 </script>
 
 <script type="text/javascript">
-	(function () {
-		RED.nodes.registerType('orion-service', {
-			category: 'config',
-			defaults: {
-				name: {
-					value: ""
-				},
-				authentication: {
-					type: "snap4city-authentication",
-					required: false
-				},
-				url: {
-					value: "broker1.snap4city.org",
-					required: true
-				},
-				port: {
-					value: 8080,
-					validate: RED.validators.number(),
-					required: true
-				}
-			},
-			credentials: {
-				user: {
-					type: "text",
-					required: false
-				},
-				password: {
-					type: "password",
-					required: false
-				}
-			},
-			label: function () {
-				return this.name || this.namespace || "Orion Service";
-			},
-			oneditprepare: function () {
-				if (this.credentials.user || this.credentials.password) {
-					$('#node-config-input-useAuth').prop('checked', true);
-					$(".node-config-input-useAuth-row").show();
-				} else {
-					$('#node-config-input-useAuth').prop('checked', false);
-					$(".node-config-input-useAuth-row").hide();
-					$('#node-config-input-user').val('');
-					$('#node-config-input-password').val('');
-				}
+    (function () {
+        RED.nodes.registerType('orion-service', {
+            category: 'config',
+            defaults: {
+                name: {
+                    value: ""
+                },
+                authentication: {
+                    type: "snap4city-authentication",
+                    required: false
+                },
+                url: {
+                    value: "broker1.snap4city.org",
+                    required: true
+                },
+                port: {
+                    value: 8080,
+                    validate: RED.validators.number(),
+                    required: true
+                }
+            },
+            credentials: {
+                user: {
+                    type: "text",
+                    required: false
+                },
+                password: {
+                    type: "password",
+                    required: false
+                }
+            },
+            label: function () {
+                return this.name || this.namespace || "Orion Service";
+            },
+            oneditprepare: function () {
+                if (this.credentials.user || this.credentials.password) {
+                    $('#node-config-input-useAuth').prop('checked', true);
+                    $(".node-config-input-useAuth-row").show();
+                } else {
+                    $('#node-config-input-useAuth').prop('checked', false);
+                    $(".node-config-input-useAuth-row").hide();
+                    $('#node-config-input-user').val('');
+                    $('#node-config-input-password').val('');
+                }
 
-				$("#node-config-input-useAuth").change(function () {
-					if ($(this).is(":checked")) {
-						$('#node-config-input-user').val('');
-						$('#node-config-input-password').val('');
-						$(".node-config-input-useAuth-row").show();
-					} else {
-						$('#node-config-input-user').val('');
-						$('#node-config-input-password').val('');
-						$(".node-config-input-useAuth-row").hide();
-					}
-				});
-			},
-			oneditsave: function () {
-				if ($("#node-config-input-useAuth").is(":checked")) {
-					$(".node-config-input-useAuth-row").show();
-				} else {
-					$(".node-config-input-useAuth-row").hide();
-					$('#node-config-input-user').val('');
-					$('#node-config-input-password').val('');
-				}
-			}
-		});
-		RED.nodes.registerType('fiware orion in', {
-			category: 'S4CIoT',
-			color: "rgb(231, 231, 174)",
-			defaults: {
-				name: {
-					value: ""
-				},
-				authentication: {
-					type: "snap4city-authentication",
-					required: false
-				},
-				service: {
-					type: "orion-service",
-					required: true
-				},
-				tls: {
-					type: "tls-config",
-					required: false
-				},
-				throttle: {
-					value: "PT5S"
-				},
-				entype: {
-					value: ""
-				},
-				enid: {
-					value: ""
-				},
-				userk1: {
-					value: ""
-				},
-				passk2: {
-					value: ""
-				},
-				apikey: {
-					value: ""
-				},
-				basicAuth: {
-					value: ""
-				},
-				ispattern: {
-					value: false
-				},
-				duration: {
-					value: "P1Y"
-				},
-				attributes: {
-					value: ""
-				},
-				condvalues: {
-					value: ""
-				},
-				includeattr: {
-					value: true
-				},
-				noderedhost: {
-					value: ""
-				},
-				noderedhostauto: {
-					value: true
-				}
-			},
-			inputs: 0,
-			outputs: 1,
-			icon: "orioncb.png",
-			label: function () {
-				if (this.name) {
-					return this.name;
-				} else {
-					return "fiware orion subscribe v1";
-				}
-			},
-			paletteLabel: function () {
-				if (this.name) {
-					return this.name;
-				} else {
-					return "fiware orion subscribe v1";
-				}
-			},
-			labelStyle: function () {
-				return this.name ? "node_label_italic" : "";
-			},
-			oneditprepare: function () {
-				$.ajax({
-					url: "isThereLocalRefreshToken/",
-					type: "GET",
-					async: false,
-					success: function (resp) {
-						if (resp.result) {
-							$("#rowAuthentication").hide();
-							$("#tipAuthentication").hide();
-						}
-					}
-				});
-				if (this.credentials.includeattr) {
-					$('#node-input-includeattr').prop('checked', true);
-				}
+                $("#node-config-input-useAuth").change(function () {
+                    if ($(this).is(":checked")) {
+                        $('#node-config-input-user').val('');
+                        $('#node-config-input-password').val('');
+                        $(".node-config-input-useAuth-row").show();
+                    } else {
+                        $('#node-config-input-user').val('');
+                        $('#node-config-input-password').val('');
+                        $(".node-config-input-useAuth-row").hide();
+                    }
+                });
+            },
+            oneditsave: function () {
+                if ($("#node-config-input-useAuth").is(":checked")) {
+                    $(".node-config-input-useAuth-row").show();
+                } else {
+                    $(".node-config-input-useAuth-row").hide();
+                    $('#node-config-input-user').val('');
+                    $('#node-config-input-password').val('');
+                }
+            }
+        });
+        RED.nodes.registerType('fiware orion in', {
+            category: 'S4CIoT',
+            color: "rgb(231, 231, 174)",
+            defaults: {
+                name: {
+                    value: ""
+                },
+                authentication: {
+                    type: "snap4city-authentication",
+                    required: false
+                },
+                service: {
+                    type: "orion-service",
+                    required: true
+                },
+                tls: {
+                    type: "tls-config",
+                    required: false
+                },
+                throttle: {
+                    value: "PT5S"
+                },
+                entype: {
+                    value: ""
+                },
+                enid: {
+                    value: ""
+                },
+                userk1: {
+                    value: ""
+                },
+                passk2: {
+                    value: ""
+                },
+                apikey: {
+                    value: ""
+                },
+                basicAuth: {
+                    value: ""
+                },
+                ispattern: {
+                    value: false
+                },
+                duration: {
+                    value: "P1Y"
+                },
+                attributes: {
+                    value: ""
+                },
+                condvalues: {
+                    value: ""
+                },
+                includeattr: {
+                    value: true
+                },
+                noderedhost: {
+                    value: ""
+                },
+                noderedhostauto: {
+                    value: true
+                }
+            },
+            inputs: 0,
+            outputs: 1,
+            icon: "orioncb.png",
+            label: function () {
+                if (this.name) {
+                    return this.name;
+                } else {
+                    return "fiware orion subscribe v1";
+                }
+            },
+            paletteLabel: function () {
+                if (this.name) {
+                    return this.name;
+                } else {
+                    return "fiware orion subscribe v1";
+                }
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : "";
+            },
+            oneditprepare: function () {
+                $.ajax({
+                    url: "isThereLocalRefreshToken/",
+                    type: "GET",
+                    async: false,
+                    success: function (resp) {
+                        if (resp.result) {
+                            $("#rowAuthentication").hide();
+                            $("#tipAuthentication").hide();
+                        }
+                    }
+                });
+                if (this.credentials.includeattr) {
+                    $('#node-input-includeattr').prop('checked', true);
+                }
 
-				$("#node-input-noderedhostauto").change(function () {
-					if ($(this).is(":checked")) {
-						$(".node-input-noderedhost-row").hide();
-						$('#node-input-noderedhost').val('');
-					} else {
-						$(".node-input-noderedhost-row").show();
-					}
-				});
-			},
-			oneditresize: function () {
-				if ($("#node-input-authentication").children().length > 1) {
-					$("#node-input-authentication option[value='_ADD_']").remove();
-				}
-			},
-		});
+                $("#node-input-noderedhostauto").change(function () {
+                    if ($(this).is(":checked")) {
+                        $(".node-input-noderedhost-row").hide();
+                        $('#node-input-noderedhost').val('');
+                    } else {
+                        $(".node-input-noderedhost-row").show();
+                    }
+                });
+            },
+            oneditresize: function () {
+                if ($("#node-input-authentication").children().length > 1) {
+                    $("#node-input-authentication option[value='_ADD_']").remove();
+                }
+            },
+        });
 
-		RED.nodes.registerType('fiware orion', {
-			category: 'S4CIoT',
-			color: "rgb(231, 231, 174)",
-			defaults: {
-				name: {
-					value: ""
-				},
-				authentication: {
-					type: "snap4city-authentication",
-					required: false
-				},
-				service: {
-					type: "orion-service",
-					required: true
-				},
-				tls: {
-					type: "tls-config",
-					required: false
-				},
-				entype: {
-					value: ""
-				},
-				enid: {
-					value: ".*"
-				},
-				userk1: {
-					value: ""
-				},
-				passk2: {
-					value: ""
-				},
-				apikey: {
-					value: ""
-				},
-				basicAuth: {
-					value: ""
-				},
-				attributes: {
-					value: ""
-				},
-				rtype: {
-					value: ""
-				},
-				rvalue: {
-					value: ""
-				},
-				limit: {
-					value: 20,
-					validate: RED.validators.number()
-				},
-				includeattr: {
-					value: true
-				}
-			},
-			inputs: 1,
-			outputs: 1,
-			icon: "orioncb.png",
-			label: function () {
-				return this.name || "fiware orion query v1";
-			},
-			paletteLabel: function () {
-				if (this.name) {
-					return this.name;
-				} else {
-					return "fiware orion query v1";
-				}
-			},
-			labelStyle: function () {
-				return this.name ? "node_label_italic" : "";
-			},
-			oneditprepare: function () {
-				$.ajax({
-					url: "isThereLocalRefreshToken/",
-					type: "GET",
-					async: false,
-					success: function (resp) {
-						if (resp.result) {
-							$("#rowAuthentication").hide();
-							$("#tipAuthentication").hide();
-						}
-					}
-				});
-				if (this.rtype || this.rvalue) {
-					$('#node-input-useFiltering').prop('checked', true);
-					$(".node-input-rtype-row").show();
+        RED.nodes.registerType('fiware orion', {
+            category: 'S4CIoT',
+            color: "rgb(231, 231, 174)",
+            defaults: {
+                name: {
+                    value: ""
+                },
+                authentication: {
+                    type: "snap4city-authentication",
+                    required: false
+                },
+                service: {
+                    type: "orion-service",
+                    required: true
+                },
+                tls: {
+                    type: "tls-config",
+                    required: false
+                },
+                entype: {
+                    value: ""
+                },
+                enid: {
+                    value: ".*"
+                },
+                userk1: {
+                    value: ""
+                },
+                passk2: {
+                    value: ""
+                },
+                apikey: {
+                    value: ""
+                },
+                basicAuth: {
+                    value: ""
+                },
+                attributes: {
+                    value: ""
+                },
+                rtype: {
+                    value: ""
+                },
+                rvalue: {
+                    value: ""
+                },
+                limit: {
+                    value: 20,
+                    validate: RED.validators.number()
+                },
+                includeattr: {
+                    value: true
+                }
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "orioncb.png",
+            label: function () {
+                return this.name || "fiware orion query v1";
+            },
+            paletteLabel: function () {
+                if (this.name) {
+                    return this.name;
+                } else {
+                    return "fiware orion query v1";
+                }
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : "";
+            },
+            oneditprepare: function () {
+                $.ajax({
+                    url: "isThereLocalRefreshToken/",
+                    type: "GET",
+                    async: false,
+                    success: function (resp) {
+                        if (resp.result) {
+                            $("#rowAuthentication").hide();
+                            $("#tipAuthentication").hide();
+                        }
+                    }
+                });
+                if (this.rtype || this.rvalue) {
+                    $('#node-input-useFiltering').prop('checked', true);
+                    $(".node-input-rtype-row").show();
 
-					if ($('#node-input-rtype').val() !== 'FIWARE::StringQuery') {
-						$(".node-input-rvalue-row").hide();
-					} else {
-						$(".node-input-rvalue-row").show();
-					}
+                    if ($('#node-input-rtype').val() !== 'FIWARE::StringQuery') {
+                        $(".node-input-rvalue-row").hide();
+                    } else {
+                        $(".node-input-rvalue-row").show();
+                    }
 
-				} else {
-					$('#node-input-useFiltering').prop('checked', false);
-					$(".node-input-rtype-row").hide();
-					$(".node-input-rvalue-row").hide();
+                } else {
+                    $('#node-input-useFiltering').prop('checked', false);
+                    $(".node-input-rtype-row").hide();
+                    $(".node-input-rvalue-row").hide();
 
-					$('#node-input-rtype').val('');
-					$('#node-input-rvalue').val('');
-				}
+                    $('#node-input-rtype').val('');
+                    $('#node-input-rvalue').val('');
+                }
 
-				if (this.credentials.includeattr) {
-					$('#node-input-includeattr').prop('checked', true);
-				}
+                if (this.credentials.includeattr) {
+                    $('#node-input-includeattr').prop('checked', true);
+                }
 
-				$("#node-input-useFiltering").change(function () {
-					if ($(this).is(":checked")) {
-						$('#node-input-rtype').val('FIWARE::StringQuery');
-						$(".node-input-rtype-row").show();
-						$('#node-input-rvalue').val('');
-						$(".node-input-rvalue-row").show();
-					} else {
-						$(".node-input-rtype-row").hide();
-						$(".node-input-rvalue-row").hide();
-						$('#node-input-rtype').val('');
-						$('#node-input-rvalue').val('');
-					}
-				});
+                $("#node-input-useFiltering").change(function () {
+                    if ($(this).is(":checked")) {
+                        $('#node-input-rtype').val('FIWARE::StringQuery');
+                        $(".node-input-rtype-row").show();
+                        $('#node-input-rvalue').val('');
+                        $(".node-input-rvalue-row").show();
+                    } else {
+                        $(".node-input-rtype-row").hide();
+                        $(".node-input-rvalue-row").hide();
+                        $('#node-input-rtype').val('');
+                        $('#node-input-rvalue').val('');
+                    }
+                });
 
-				$("#node-input-rtype").change(function () {
-					if ($('#node-input-rtype').val() === "FIWARE::StringQuery") {
-						$(".node-input-rvalue-row").show();
-					} else {
-						$(".node-input-rvalue").val('');
-						$(".node-input-rvalue-row").hide();
-					}
-				});
-			},
-			oneditresize: function () {
-				if ($("#node-input-authentication").children().length > 1) {
-					$("#node-input-authentication option[value='_ADD_']").remove();
-				}
-			},
-		});
-		RED.nodes.registerType('orion-test', {
-			category: 'S4CIoT',
-			color: "rgb(231, 231, 174)",
-			defaults: {
-				name: {
-					value: ""
-				},
-				authentication: {
-					type: "snap4city-authentication",
-					required: false
-				},
-				service: {
-					type: "orion-service",
-					required: true
-				},
-				tls: {
-					type: "tls-config",
-					required: false
-				},
-				entype: {
-					value: ""
-				},
-				enid: {
-					value: ""
-				},
-				userk1: {
-					value: ""
-				},
-				passk2: {
-					value: ""
-				},
-				apikey: {
-					value: ""
-				},
-				basicAuth: {
-					value: ""
-				},
-				attrkey: {
-					value: ""
-				},
-				attrvalue: {
-					value: ""
-				}
-			},
-			inputs: 1,
-			outputs: 1,
-			icon: "orioncb.png",
-			oneditprepare: function () {
-				$.ajax({
-					url: "isThereLocalRefreshToken/",
-					type: "GET",
-					async: false,
-					success: function (resp) {
-						if (resp.result) {
-							$("#rowAuthentication").hide();
-							$("#tipAuthentication").hide();
-						}
-					}
-				});
-			},
-			oneditresize: function () {
-				if ($("#node-input-authentication").children().length > 1) {
-					$("#node-input-authentication option[value='_ADD_']").remove();
-				}
-			},
-			label: function () {
-				return this.name || "fiware orion update v1";
-			},
-			paletteLabel: function () {
-				if (this.name) {
-					return this.name;
-				} else {
-					return "fiware orion update v1";
-				}
-			},
-			labelStyle: function () {
-				return this.name ? "node_label_italic" : "";
-			}
-		});
+                $("#node-input-rtype").change(function () {
+                    if ($('#node-input-rtype').val() === "FIWARE::StringQuery") {
+                        $(".node-input-rvalue-row").show();
+                    } else {
+                        $(".node-input-rvalue").val('');
+                        $(".node-input-rvalue-row").hide();
+                    }
+                });
+            },
+            oneditresize: function () {
+                if ($("#node-input-authentication").children().length > 1) {
+                    $("#node-input-authentication option[value='_ADD_']").remove();
+                }
+            },
+        });
+        RED.nodes.registerType('orion-test', {
+            category: 'S4CIoT',
+            color: "rgb(231, 231, 174)",
+            defaults: {
+                name: {
+                    value: ""
+                },
+                authentication: {
+                    type: "snap4city-authentication",
+                    required: false
+                },
+                service: {
+                    type: "orion-service",
+                    required: true
+                },
+                tls: {
+                    type: "tls-config",
+                    required: false
+                },
+                entype: {
+                    value: ""
+                },
+                enid: {
+                    value: ""
+                },
+                userk1: {
+                    value: ""
+                },
+                passk2: {
+                    value: ""
+                },
+                apikey: {
+                    value: ""
+                },
+                basicAuth: {
+                    value: ""
+                },
+                attrkey: {
+                    value: ""
+                },
+                attrvalue: {
+                    value: ""
+                }
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "orioncb.png",
+            oneditprepare: function () {
+                $.ajax({
+                    url: "isThereLocalRefreshToken/",
+                    type: "GET",
+                    async: false,
+                    success: function (resp) {
+                        if (resp.result) {
+                            $("#rowAuthentication").hide();
+                            $("#tipAuthentication").hide();
+                        }
+                    }
+                });
+            },
+            oneditresize: function () {
+                if ($("#node-input-authentication").children().length > 1) {
+                    $("#node-input-authentication option[value='_ADD_']").remove();
+                }
+            },
+            label: function () {
+                return this.name || "fiware orion update v1";
+            },
+            paletteLabel: function () {
+                if (this.name) {
+                    return this.name;
+                } else {
+                    return "fiware orion update v1";
+                }
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : "";
+            }
+        });
 
-		RED.nodes.registerType('fiware-orion-out', {
-			category: 'S4CIoT',
-			color: "rgb(42, 231, 42)",
-			defaults: {
-				name: {
-					value: ""
-				},
-				authentication: {
-					type: "snap4city-authentication",
-					required: false
-				},
-				tls: {
-					type: "tls-config",
-					required: false
-				},
-				service: {
-					type: "orion-service",
-					required: true
-				},
-				entype: {
-					value: ""
-				},
-				enid: {
-					value: ""
-				},
-				userk1: {
-					value: ""
-				},
-				passk2: {
-					value: ""
-				},
-				apikey: {
-					value: ""
-				},
-				basicAuth: {
-					value: ""
-				}
-			},
-			inputs: 1,
-			outputs: 0,
-			icon: "orioncb.png",
-			oneditprepare: function () {
-				$.ajax({
-					url: "isThereLocalRefreshToken/",
-					type: "GET",
-					async: false,
-					success: function (resp) {
-						if (resp.result) {
-							$("#rowAuthentication").hide();
-							$("#tipAuthentication").hide();
-						}
-					}
-				});
-			},
-			oneditresize: function () {
-				if ($("#node-input-authentication").children().length > 1) {
-					$("#node-input-authentication option[value='_ADD_']").remove();
-				}
-			},
-			label: function () {
-				return this.name || "fiware orion out v1";
-			},
-			paletteLabel: function () {
-				if (this.name) {
-					return this.name;
-				} else {
-					return "fiware orion out v1";
-				}
-			},
-			labelStyle: function () {
-				return this.name ? "node_label_italic" : "";
-			}
-		});
-	})();
+        RED.nodes.registerType('fiware-orion-out', {
+            category: 'S4CIoT',
+            color: "rgb(42, 231, 42)",
+            defaults: {
+                name: {
+                    value: ""
+                },
+                authentication: {
+                    type: "snap4city-authentication",
+                    required: false
+                },
+                tls: {
+                    type: "tls-config",
+                    required: false
+                },
+                service: {
+                    type: "orion-service",
+                    required: true
+                },
+                entype: {
+                    value: ""
+                },
+                enid: {
+                    value: ""
+                },
+                userk1: {
+                    value: ""
+                },
+                passk2: {
+                    value: ""
+                },
+                apikey: {
+                    value: ""
+                },
+                basicAuth: {
+                    value: ""
+                }
+            },
+            inputs: 1,
+            outputs: 0,
+            icon: "orioncb.png",
+            oneditprepare: function () {
+                $.ajax({
+                    url: "isThereLocalRefreshToken/",
+                    type: "GET",
+                    async: false,
+                    success: function (resp) {
+                        if (resp.result) {
+                            $("#rowAuthentication").hide();
+                            $("#tipAuthentication").hide();
+                        }
+                    }
+                });
+            },
+            oneditresize: function () {
+                if ($("#node-input-authentication").children().length > 1) {
+                    $("#node-input-authentication option[value='_ADD_']").remove();
+                }
+            },
+            label: function () {
+                return this.name || "fiware orion out v1";
+            },
+            paletteLabel: function () {
+                if (this.name) {
+                    return this.name;
+                } else {
+                    return "fiware orion out v1";
+                }
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : "";
+            }
+        });
+    })();
 </script>

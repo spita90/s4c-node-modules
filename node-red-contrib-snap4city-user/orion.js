@@ -334,19 +334,33 @@ module.exports = function (RED) {
 
 						if (res.statusCode === 200) {
 							var parsedResponse = JSON.parse(msg.payload);
-
+							//util.log("RESPONSE: "+msg.payload);
 							if (parsedResponse.subscribeResponse != null) {
 								var subscriptionID = parsedResponse.subscribeResponse.subscriptionId;
-
+								// AS fix
 								var nodeID = (node.id + "").replace('.', '');
+								listenOnUrl(nodeID, function (req, res) {
+									if (req.body.subscriptionId != subscriptionIDs[nodeID] && subscriptionIDs[nodeID] != undefined) {
+										util.log("Recognized invalid subscription: " + req.body.subscriptionId + " currentId: " + subscriptionIDs[nodeID]);
+										unsubscribeFromOrion(node, req.body.subscriptionId, orionUrl, config);
+									} else {
+										var payload = formatOutput(node, config, req.body);
+										node.send({
+											payload: payload,
+											statusCode: 200
+										});
+									}
+									res.sendStatus(200);
+								});
+
 								util.log("subscribeContext elementId: " + config.enid + " nodeId: " + nodeID + " oldSubId: " + subscriptionIDs[nodeID] + " newSubId: " + subscriptionID);
 								var idToUnsubscribe = subscriptionIDs[nodeID];
-								if (typeof subscriptionIDs[nodeID] != "undefined") {
+								subscriptionIDs[nodeID] = subscriptionID;
+								if (subscriptionIDs[nodeID] != undefined) {
 									setTimeout(function () {
 										unsubscribeFromOrion(node, idToUnsubscribe, orionUrl, config);
 									}, 2000);
 								}
-								subscriptionIDs[nodeID] = subscriptionID;
 
 							} else if (parsedResponse.result == false) {
 								util.log("subscribeContext error:" + JSON.stringify(msg));
@@ -371,7 +385,7 @@ module.exports = function (RED) {
 
 				req.on('error', function (err) {
 					//msg.payload = err.toString();
-					//msg.statusCode = err.code;			
+					//msg.statusCode = err.code;
 
 					//util.log("subscribeContext error:"+msg.payload);
 					util.log("subscribeContext error:" + err);
@@ -397,20 +411,6 @@ module.exports = function (RED) {
 
 				req.end();
 
-				var nodeID = (node.id + "").replace('.', '');
-				listenOnUrl(nodeID, function (req, res) {
-					if (req.body.subscriptionId != subscriptionIDs[nodeID]) {
-						util.log("Recognized invalid subscription: " + req.body.subscriptionId + " currentId: " + subscriptionIDs[nodeID]);
-						unsubscribeFromOrion(node, req.body.subscriptionId, orionUrl, config);
-					} else {
-						var payload = formatOutput(node, config, req.body);
-						node.send({
-							payload: payload,
-							statusCode: 200
-						});
-					}
-					res.sendStatus(200);
-				});
 			} catch (err) {
 				util.log("subscribeContext error:" + err);
 				node.status({
@@ -467,7 +467,7 @@ module.exports = function (RED) {
 				method: 'POST',
 				rejectUnauthorized: false,
 				headers: {
-					'Authorization': 'Bearer ' + accessToken, //by default, we insert the Snap4City SSo AccessToken, that can be overrided by the config.basicAuth			
+					'Authorization': 'Bearer ' + accessToken, //by default, we insert the Snap4City SSo AccessToken, that can be overrided by the config.basicAuth
 					'Content-Type': 'application/json',
 					'Accept': 'application/json',
 					'Content-Length': JSON.stringify(payload).length
@@ -760,8 +760,8 @@ module.exports = function (RED) {
 		});
 	}
 
-	// To validate two ways connectivity following flow implemented	
-	// init: 
+	// To validate two ways connectivity following flow implemented
+	// init:
 	// 1. (v) create context element of type Test with id: node uid
 	// 2. temporary subscribe to changes to that element
 
@@ -791,7 +791,7 @@ module.exports = function (RED) {
 					unsubscribeFromOrion(node, testSubscriptionID, orionUrl).then(function(res){
 						util.log("Unsubscribed test subscription: " + testSubscriptionID + " res: " + JSON.stringify(res));
 					});
-					
+
                 	reject("Communication with context broker failed");
                 }else{*/
 				util.log(nodeID + " result.subscriptionId: " + result.subscriptionId + "==" + testSubscriptionID);
@@ -845,7 +845,7 @@ module.exports = function (RED) {
 		}
 	}
 
-	//OrionSubscribe node constructor	
+	//OrionSubscribe node constructor
 	RED.nodes.registerType("fiware orion in", OrionSubscribe);
 
 	function OrionSubscribe(n) {
@@ -934,8 +934,8 @@ module.exports = function (RED) {
 
 				// first try to get user specified uri, TODO: many input validations...
 				var myUri = node.noderedhost;
-				if (myUri) {
-					resolve(myUri + RED.settings.httpRoot /*+ ":" + RED.settings.uiPort*/ ); //PB removed port
+				if (myUri) {								// AS fix
+					resolve(myUri + RED.settings.httpRoot.substring(0, RED.settings.httpRoot.lenght - 1) /*+ ":" + RED.settings.uiPort*/ ); //PB removed port
 				} else {
 					myUri = RED.settings.externalHost; //PB fix added
 					if (myUri)
@@ -972,7 +972,7 @@ module.exports = function (RED) {
 		);
 	}
 
-	//OrionQuery node constructor	
+	//OrionQuery node constructor
 	RED.nodes.registerType("fiware orion", OrionQuery);
 
 	function OrionQuery(n) {
@@ -1080,7 +1080,7 @@ module.exports = function (RED) {
 		}
 	}
 
-	//OrionUpdate node constructor	
+	//OrionUpdate node constructor
 	RED.nodes.registerType("orion-test", OrionUpdate);
 
 	function OrionUpdate(n) {
@@ -1200,7 +1200,7 @@ module.exports = function (RED) {
 	}
 
 
-	//OrionOut node constructor	
+	//OrionOut node constructor
 	RED.nodes.registerType("fiware-orion-out", OrionOut);
 
 
