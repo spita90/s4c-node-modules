@@ -23,7 +23,7 @@
 	<div class="form-row">
 		<label for="node-config-input-port">
 			<i class="fa fa-globe"></i>
-			<span>port</span>
+			<span>Port</span>
 		</label>
 		<input type="text" id="node-config-input-port" style="width: 50px">
 	</div>
@@ -100,6 +100,20 @@
 			<span>key 2</span>
 		</label>
 		<input type="text" id="node-input-passk2">
+	</div>
+	<div class="form-row">
+		<label for="node-input-tenant">
+			<i class="fa fa-globe"></i>
+			<span>Service/Tenant</span>
+		</label>
+		<input type="text" id="node-input-tenant">
+	</div>
+	<div class="form-row">
+		<label for="node-input-servicepath">
+			<i class="fa fa-globe"></i>
+			<span>Service Path</span>
+		</label>
+		<input type="text" id="node-input-servicepath">
 	</div>
 	<div class="form-row">
 		<label for="node-input-apikey">
@@ -257,6 +271,20 @@
 		</label>
 		<input type="text" id="node-input-passk2">
 	</div>
+		<div class="form-row">
+		<label for="node-input-tenant">
+			<i class="fa fa-globe"></i>
+			<span>Service/Tenant</span>
+		</label>
+		<input type="text" id="node-input-tenant">
+	</div>
+	<div class="form-row">
+		<label for="node-input-servicepath">
+			<i class="fa fa-globe"></i>
+			<span>Service Path</span>
+		</label>
+		<input type="text" id="node-input-servicepath">
+	</div>
 	<div class="form-row">
 		<label for="node-input-apikey">
 			<i class="fa fa-globe"></i>
@@ -388,6 +416,20 @@
 		</label>
 		<input type="text" id="node-input-passk2">
 	</div>
+		<div class="form-row">
+		<label for="node-input-tenant">
+			<i class="fa fa-globe"></i>
+			<span>Service/Tenant</span>
+		</label>
+		<input type="text" id="node-input-tenant">
+	</div>
+	<div class="form-row">
+		<label for="node-input-servicepath">
+			<i class="fa fa-globe"></i>
+			<span>Service Path</span>
+		</label>
+		<input type="text" id="node-input-servicepath">
+	</div>
 	<div class="form-row">
 		<label for="node-input-apikey">
 			<i class="fa fa-globe"></i>
@@ -484,6 +526,20 @@
 		</label>
 		<input type="text" id="node-input-passk2">
 	</div>
+		<div class="form-row">
+		<label for="node-input-tenant">
+			<i class="fa fa-globe"></i>
+			<span>Service/Tenant</span>
+		</label>
+		<input type="text" id="node-input-tenant">
+	</div>
+	<div class="form-row">
+		<label for="node-input-servicepath">
+			<i class="fa fa-globe"></i>
+			<span>Service Path</span>
+		</label>
+		<input type="text" id="node-input-servicepath">
+	</div>
 	<div class="form-row">
 		<label for="node-input-apikey">
 			<i class="fa fa-globe"></i>
@@ -547,6 +603,14 @@
 			<span class="property-type">string</span>
 		</dt>
 		<dd>K2 credential to be specified for context broker secured via Snap4City-OrionFilter (optional). It can be passed in <code>msg.auth.k2</code> (see example below)</dd>
+		<dt>Service/Tenant
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If the device is in a Multi-Tenant organization, you have to specify here your devices Tenant</dd>
+		<dt>Service Path
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If your device is in a Service Path hierarchy, you have to specify here your devices Service Path</dd>
 		<dt>apikey
 			<span class="property-type">string</span>
 		</dt>
@@ -631,6 +695,16 @@
 		</dt>
 		<dd>K2 credential to be specified for context broker secured via Snap4City-OrionFilter (optional). It can be passed in <code>msg.auth.k2</code></dd>
 
+		<dt>Service/Tenant
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If the device is in a Multi-Tenant organization, you have to specify here your devices Tenant</dd>
+
+		<dt>Service Path
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If your device is in a Service Path hierarchy, you have to specify here your devices Service Path</dd>
+
 		<dt>apikey
 			<span class="property-type">string</span>
 		</dt>
@@ -707,6 +781,16 @@
 			<span class="property-type">string</span>
 		</dt>
 		<dd>K2 credential to be specified for context broker secured via Snap4City-OrionFilter (optional)</dd>
+
+		<dt>Service/Tenant
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If the device is in a Multi-Tenant organization, you have to specify here your devices Tenant</dd>
+
+		<dt>Service Path
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If your device is in a Service Path hierarchy, you have to specify here your devices Service Path</dd>
 
 		<dt>apikey
 			<span class="property-type">string</span>
@@ -814,6 +898,16 @@
 			<span class="property-type">string</span>
 		</dt>
 		<dd>K2 credential to be specified for context broker secured via Snap4City-OrionFilter (optional). It can be passed in <code>msg.passk2</code></dd>
+
+		<dt>Service/Tenant
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If the device is in a Multi-Tenant organization, you have to specify here your devices Tenant</dd>
+
+		<dt>Service Path
+			<span class="property-type">string</span>
+		</dt>
+		<dd>If your device is in a Service Path hierarchy, you have to specify here your devices Service Path</dd>
 
 		<dt>apikey
 			<span class="property-type">string</span>
@@ -968,6 +1062,12 @@
                 passk2: {
                     value: ""
                 },
+                tenant: {
+                    value: ""
+                },
+                servicepath: {
+                    value: ""
+                },
                 apikey: {
                     value: ""
                 },
@@ -1077,6 +1177,12 @@
                     value: ""
                 },
                 passk2: {
+                    value: ""
+                },
+                tenant: {
+                    value: ""
+                },
+                servicepath: {
                     value: ""
                 },
                 apikey: {
@@ -1213,6 +1319,12 @@
                 passk2: {
                     value: ""
                 },
+                tenant: {
+                    value: ""
+                },
+                servicepath: {
+                    value: ""
+                },
                 apikey: {
                     value: ""
                 },
@@ -1264,7 +1376,7 @@
 
         RED.nodes.registerType('fiware-orion-out', {
             category: 'S4CIoT',
-            color: "rgb(42, 231, 42)",
+            color: "rgb(231, 231, 174)",
             defaults: {
                 name: {
                     value: ""
@@ -1291,6 +1403,12 @@
                     value: ""
                 },
                 passk2: {
+                    value: ""
+                },
+                tenant: {
+                    value: ""
+                },
+                servicepath: {
                     value: ""
                 },
                 apikey: {
