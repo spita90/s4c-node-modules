@@ -87,7 +87,21 @@ module.exports = function (RED) {
 				shape: "dot",
 				text: "Querying data"
 			});
-			util.log("queryContext " + config.enid);
+
+			// AS - in the Multi-tenancy / Service Path scenario, the new enid is in this form: tenant.servicepath.enid
+			// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
+
+			var enid = config.enid;
+			var servicePath = "/";
+			if (config.tenant != null && config.tenant != ""){
+				if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
+					config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+				}
+				servicePath += config.servicepath;
+				enid = config.tenant+"."+servicePath+"."+enid;
+			}
+
+			util.log("queryContext " + enid);
 			//elementID = payload.entities[0].id;
 			var orionBrokerService = RED.nodes.getNode(config.service);
 			return when.promise(function (resolve, reject) {
@@ -106,7 +120,7 @@ module.exports = function (RED) {
 				var options = {
 					hostname: hostname,
 					port: orionBrokerService.port,
-					path: prefixPath + "/v1/queryContext/?limit=" + config.limit + "&elementid=" + config.enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
+					path: prefixPath + "/v1/queryContext/?limit=" + config.limit + "&elementid=" + enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
 					method: 'POST',
 					rejectUnauthorized: false,
 					headers: {
@@ -122,6 +136,13 @@ module.exports = function (RED) {
 
 				if (config.basicAuth != null && config.basicAuth != "") {
 					options.headers.Authorization = config.basicAuth;
+				}
+
+				if (config.tenant != null && config.tenant != "") {
+					options.headers["Fiware-Service"]=config.tenant;
+					if(servicePath!="/"){
+						options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
+					}
 				}
 
 				console.log("options:" + JSON.stringify(options));
@@ -268,7 +289,21 @@ module.exports = function (RED) {
 				shape: "dot",
 				text: "Subscribing"
 			});
-			util.log("subscribeContext in: " + orionUrl + " with node id: " + node.id);
+
+			// AS - in the Multi-tenancy / Service Path scenario, the new enid is in this form: tenant.servicepath.enid
+			// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
+
+			var enid = config.enid;
+			var servicePath = "/";
+			if (config.tenant != null && config.tenant != ""){
+				if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
+					config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+				}
+				servicePath += config.servicepath;
+				enid = config.tenant+"."+servicePath+"."+enid;
+			}
+
+			util.log("subscribeContext in: " + orionUrl + " with node id: " + node.id+ ". Enid: "+enid);
 			var reference = payload.reference;
 			//elementID = payload.entities[0].id;
 			var orionBrokerService = RED.nodes.getNode(config.service);
@@ -287,7 +322,7 @@ module.exports = function (RED) {
 			var options = {
 				hostname: hostname,
 				port: orionBrokerService.port,
-				path: prefixPath + "/v1/subscribeContext/?elementid=" + config.enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
+				path: prefixPath + "/v1/subscribeContext/?elementid=" + enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
 				method: 'POST',
 				rejectUnauthorized: false,
 				headers: {
@@ -304,6 +339,13 @@ module.exports = function (RED) {
 
 			if (config.basicAuth != null && config.basicAuth != "") {
 				options.headers.Authorization = config.basicAuth;
+			}
+
+			if (config.tenant != null && config.tenant != "") {
+				options.headers["Fiware-Service"]=config.tenant;
+				if(servicePath!="/"){
+					options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
+				}
 			}
 
 			var tlsNode = RED.nodes.getNode(config.tls);
@@ -353,7 +395,7 @@ module.exports = function (RED) {
 									res.sendStatus(200);
 								});
 
-								util.log("subscribeContext elementId: " + config.enid + " nodeId: " + nodeID + " oldSubId: " + subscriptionIDs[nodeID] + " newSubId: " + subscriptionID);
+								util.log("subscribeContext elementId: " + enid + " nodeId: " + nodeID + " oldSubId: " + subscriptionIDs[nodeID] + " newSubId: " + subscriptionID);
 								var idToUnsubscribe = subscriptionIDs[nodeID];
 								subscriptionIDs[nodeID] = subscriptionID;
 								if (subscriptionIDs[nodeID] != undefined) {
@@ -446,6 +488,19 @@ module.exports = function (RED) {
 			"subscriptionId": subscriptionId
 		};
 
+		// AS - in the Multi-tenancy / Service Path scenario, the new enid is in this form: tenant.servicepath.enid
+		// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
+
+		var enid = config.enid;
+		var servicePath = "/";
+		if (config.tenant != null && config.tenant != ""){
+			if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
+				config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+			}
+			servicePath += config.servicepath;
+			enid = config.tenant+"."+servicePath+"."+enid;
+		}
+
 		var orionBrokerService = RED.nodes.getNode(config.service);
 		return when.promise(function (resolve, reject) {
 
@@ -463,7 +518,7 @@ module.exports = function (RED) {
 			var options = {
 				hostname: hostname,
 				port: orionBrokerService.port,
-				path: prefixPath + "/v1/unsubscribeContext/?elementid=" + config.enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
+				path: prefixPath + "/v1/unsubscribeContext/?elementid=" + enid + (config.userk1 ? "&k1=" + config.userk1 : "") + (config.passk2 ? "&k2=" + config.passk2 : ""),
 				method: 'POST',
 				rejectUnauthorized: false,
 				headers: {
@@ -480,6 +535,13 @@ module.exports = function (RED) {
 
 			if (config.basicAuth != null && config.basicAuth != "") {
 				options.headers.Authorization = config.basicAuth;
+			}
+
+			if (config.tenant != null && config.tenant != "") {
+				options.headers["Fiware-Service"]=config.tenant;
+				if(servicePath!="/"){
+					options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
+				}
 			}
 
 			var tlsNode = RED.nodes.getNode(config.tls);
@@ -640,6 +702,8 @@ module.exports = function (RED) {
 		n.ispattern = n.ispattern;
 		n.userk1 = n.userk1;
 		n.passk2 = n.passk2;
+		n.tenant = n.tenant;
+		n.servicepath = n.servicepath;
 		n.apikey = n.apikey;
 		n.basicAuth = n.basicAuth;
 		n.attributes = n.attributes;
@@ -1057,6 +1121,8 @@ module.exports = function (RED) {
 		n.limit = n.limit || msg.limit || LIMIT;
 		n.userk1 = n.userk1 || msg.userk1;
 		n.passk2 = n.passk2 || msg.passk2;
+		n.tenant = n.tenant || msg.tenant;
+		n.servicepath = n.servicepath || msg.servicepath;
 		n.apikey = n.apikey || msg.apikey;
 		n.basicAuth = n.basicAuth || msg.basicAuth;
 		n.attributes = n.attributes || msg.attributes;
