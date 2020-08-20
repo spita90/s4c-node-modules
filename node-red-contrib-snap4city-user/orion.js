@@ -92,14 +92,17 @@ module.exports = function (RED) {
 			// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
 
 			var enid = config.enid;
+			/*
 			var servicePath = "/";
 			if (config.tenant != null && config.tenant != ""){
 				if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
-					config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+					config.servicepath = config.servicepath.substring(1,config.servicepath.length);
 				}
 				servicePath += config.servicepath;
-				enid = config.tenant+"."+servicePath+"."+enid;
+				//enid = config.tenant+"."+servicePath+"."+enid;
 			}
+
+			 */
 
 			util.log("queryContext " + enid);
 			//elementID = payload.entities[0].id;
@@ -140,9 +143,7 @@ module.exports = function (RED) {
 
 				if (config.tenant != null && config.tenant != "") {
 					options.headers["Fiware-Service"]=config.tenant;
-					if(servicePath!="/"){
-						options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
-					}
+						options.headers["Fiware-ServicePath"]=config.servicepath;
 				}
 
 				console.log("options:" + JSON.stringify(options));
@@ -294,14 +295,17 @@ module.exports = function (RED) {
 			// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
 
 			var enid = config.enid;
+			/*
 			var servicePath = "/";
 			if (config.tenant != null && config.tenant != ""){
 				if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
-					config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+					config.servicepath = config.servicepath.substring(1,config.servicepath.length);
 				}
 				servicePath += config.servicepath;
-				enid = config.tenant+"."+servicePath+"."+enid;
+				//enid = config.tenant+"."+servicePath+"."+enid;
 			}
+
+			 */
 
 			util.log("subscribeContext in: " + orionUrl + " with node id: " + node.id+ ". Enid: "+enid);
 			var reference = payload.reference;
@@ -343,9 +347,7 @@ module.exports = function (RED) {
 
 			if (config.tenant != null && config.tenant != "") {
 				options.headers["Fiware-Service"]=config.tenant;
-				if(servicePath!="/"){
-					options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
-				}
+					options.headers["Fiware-ServicePath"]=config.servicepath;
 			}
 
 			var tlsNode = RED.nodes.getNode(config.tls);
@@ -492,14 +494,16 @@ module.exports = function (RED) {
 		// Note that the servicePath has to begin with "/", so this code ensures that is actually like: tenant./servicepath.enid
 
 		var enid = config.enid;
+		/*
 		var servicePath = "/";
 		if (config.tenant != null && config.tenant != ""){
 			if (config.servicepath != null && config.servicepath != "" && config.servicepath.charAt(0)=="/"){
-				config.servicepath = config.servicepath.substring(1,config.servicepath.length());
+				config.servicepath = config.servicepath.substring(1,config.servicepath.length);
 			}
 			servicePath += config.servicepath;
-			enid = config.tenant+"."+servicePath+"."+enid;
+			//enid = config.tenant+"."+servicePath+"."+enid;
 		}
+		 */
 
 		var orionBrokerService = RED.nodes.getNode(config.service);
 		return when.promise(function (resolve, reject) {
@@ -539,9 +543,7 @@ module.exports = function (RED) {
 
 			if (config.tenant != null && config.tenant != "") {
 				options.headers["Fiware-Service"]=config.tenant;
-				if(servicePath!="/"){
-					options.headers["Fiware-ServicePath"]=servicePath.substring(1,servicePath.length);
-				}
+					options.headers["Fiware-ServicePath"]=config.servicepath;
 			}
 
 			var tlsNode = RED.nodes.getNode(config.tls);
