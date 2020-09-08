@@ -232,12 +232,20 @@ module.exports = function (RED) {
 					}
 				};
 
+				util.log("PATH: "+options.path);
+
 				if (apikey) {
 					options.headers.apikey = apikey;
 				}
 
 				if (basicAuth) {
 					options.headers.Authorization = basicAuth;
+				}
+
+				if (config.tenant != null && config.tenant != "") {
+					options.headers["Fiware-Service"]=config.tenant;
+					options.headers["Fiware-ServicePath"]=config.servicepath;
+					util.log("TENANT: "+config.tenant+", SERVICE PATH: "+config.servicepath);
 				}
 
 				var tlsNode = RED.nodes.getNode(config.tls);
